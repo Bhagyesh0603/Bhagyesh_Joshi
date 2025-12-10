@@ -1,6 +1,7 @@
 'use client';
 
 import LiquidEther from '@/components/LiquidEther';
+import CustomCursor from '@/components/CustomCursor';
 import Navigation from '@/components/Navigation';
 import { Github, Linkedin, Send } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -45,6 +46,7 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen">
+      <CustomCursor />
       <Navigation scrollProgress={scrollProgress} />
 
       {/* Hero Section - WHITE */}
@@ -108,8 +110,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Section - BLACK */}
-      <section id="about" className="relative min-h-screen w-full bg-zinc-900 flex items-center justify-center px-8 py-24 transition-colors duration-1000">
+      {/* About Section - BLACK with curved top */}
+      <section id="about" className="section-curved relative min-h-screen w-full bg-zinc-900 flex items-center justify-center px-8 py-24">
         <div className="max-w-6xl w-full">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
@@ -136,8 +138,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Expertise Section - WHITE */}
-      <section className="relative min-h-screen w-full bg-white py-24 px-8 transition-colors duration-1000">
+      {/* Expertise Section - WHITE with curved top */}
+      <section className="section-curved relative min-h-screen w-full bg-white py-24 px-8">
         <div className="max-w-7xl mx-auto">
           {/* Large Text Animation */}
           <div className="mb-24 overflow-hidden">
@@ -209,8 +211,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Marquee Section - WHITE/BLACK TRANSITION */}
-      <section className="relative w-full bg-zinc-900 py-32 overflow-hidden transition-colors duration-1000">
+      {/* Marquee Section - WHITE/BLACK TRANSITION with curved top */}
+      <section className="section-curved relative w-full bg-zinc-900 py-32 overflow-hidden">
         <div className="marquee-container">
           <div className="marquee-content text-6xl font-light text-white whitespace-nowrap">
             <span>Innovative Self-Made Creations ✦ </span>
@@ -221,7 +223,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Projects Section - BLACK */}
+      {/* Projects Section - BLACK (continues from marquee, no curve) */}
       <section id="works" className="relative min-h-screen w-full bg-zinc-900 py-24 px-8 transition-colors duration-1000">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-6xl font-bold text-white mb-4">
@@ -352,6 +354,38 @@ export default function Home() {
           }
           100% {
             transform: translateX(-50%);
+          }
+        }
+
+        /* Section curved transitions */
+        .section-curved {
+          position: relative;
+          border-top-left-radius: 50px;
+          border-top-right-radius: 50px;
+          margin-top: -50px;
+          z-index: 10;
+        }
+
+        section {
+          position: relative;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+          .section-curved {
+            animation: slideUp linear;
+            animation-timeline: view();
+            animation-range: entry 0% cover 30%;
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            transform: translateY(100px);
+            opacity: 0.8;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
           }
         }
       `}</style>

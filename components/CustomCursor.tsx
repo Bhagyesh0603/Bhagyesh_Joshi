@@ -1,61 +1,47 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ x: -100, y: -100 });
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const moveCursor = (e: MouseEvent) => {
+    setIsMounted(true);
+
+    const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
 
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === 'A' ||
-        target.tagName === 'BUTTON' ||
-        target.closest('a') ||
-        target.closest('button') ||
-        target.classList.contains('hover-target')
-      ) {
-        setIsHovering(true);
-      }
-    };
+    document.addEventListener('mousemove', handleMouseMove);
 
-    const handleMouseOut = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === 'A' ||
-        target.tagName === 'BUTTON' ||
-        target.closest('a') ||
-        target.closest('button') ||
-        target.classList.contains('hover-target')
-      ) {
-        setIsHovering(false);
-      }
-    };
-
-    window.addEventListener('mousemove', moveCursor);
-    document.addEventListener('mouseover', handleMouseOver);
-    document.addEventListener('mouseout', handleMouseOut);
+    // Hide default cursor
+    const style = document.createElement('style');
+    style.innerHTML = `* { cursor: none !important; }`;
+    document.head.appendChild(style);
 
     return () => {
-      window.removeEventListener('mousemove', moveCursor);
-      document.removeEventListener('mouseover', handleMouseOver);
-      document.removeEventListener('mouseout', handleMouseOut);
+      document.removeEventListener('mousemove', handleMouseMove);
+      style.remove();
     };
   }, []);
 
+  if (!isMounted) return null;
+
   return (
     <div
-      ref={cursorRef}
-      className={`custom-cursor ${isHovering ? 'hovering' : ''}`}
-      style={{ 
+      style={{
+        position: 'fixed',
         left: `${position.x}px`,
         top: `${position.y}px`,
+        width: '40px',
+        height: '40px',
+        border: '2px solid #fff',
+        borderRadius: '50%',
+        pointerEvents: 'none',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 99999,
+        mixBlendMode: 'difference',
       }}
     />
   );
